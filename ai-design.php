@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: AI Design (Storefront Look)
+ * Plugin Name: AI Design for WooCommerce (Storefront Look)
  * Description: Storefront look and feel an AI agent can drive: theme style parameters (colours, fonts, buttons, radius), an announcement bar, floating contact buttons and trust badges, home-page section blocks, small storefront tweaks (free-shipping bar, sale badges, maintenance mode), product compare, variation swatches, product add-ons and product video.
  * Version: 1.1.0
  * Requires at least: 6.9
