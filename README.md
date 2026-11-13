@@ -1,6 +1,6 @@
 # AI Design — Storefront Look over MCP
 
-https://img.shields.io/badge/WordPress-6.9%2B-21759b?style=flat-square&logo=wordpress&logoColor=white) https://img.shields.io/badge/WooCommerce-96588a?style=flat-square&logo=woocommerce&logoColor=white) https://img.shields.io/badge/PHP-8.0%2B-777bb4?style=flat-square&logo=php&logoColor=white) https://img.shields.io/badge/License-GPL--2.0--or--later-blue?style=flat-square)
+![WordPress](https://img.shields.io/badge/WordPress-6.9%2B-21759b?style=flat-square) ![WooCommerce](https://img.shields.io/badge/WooCommerce-96588a?style=flat-square) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-777bb4?style=flat-square) ![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue?style=flat-square)
 
 **An MCP server that lets an AI agent change how a WooCommerce store looks — theme styles, homepage sections, colour palettes, product comparisons, variant swatches, add-ons and product video — without ever injecting HTML or code.**
 
