@@ -1,4 +1,4 @@
-# AI Design — Storefront Look over MCP
+# AI Design for WooCommerce — Storefront Look over MCP
 
 ![WordPress](https://img.shields.io/badge/WordPress-6.9%2B-21759b?style=flat-square) ![WooCommerce](https://img.shields.io/badge/WooCommerce-96588a?style=flat-square) ![PHP](https://img.shields.io/badge/PHP-8.0%2B-777bb4?style=flat-square) ![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue?style=flat-square)
 
@@ -75,9 +75,9 @@ Most of these are **configure-once** features, not daily operations. The intende
 
 | Repo | Role |
 |---|---|
-| [aihand](https://github.com/baibiaowang/aihand-for-woocommerce) | Store operations — the day-to-day work |
-| **aidesign** (this repo) | Storefront look — what this plugin does |
-| [aitools](https://github.com/baibiaowang/aitools-for-woocommerce) | Store infrastructure — backup, mail, consent, pixels, cache |
+| [ai-hand](https://github.com/baibiaowang/ai-hand-for-woocommerce) | Store operations — the day-to-day work |
+| **ai-design** (this repo) | Storefront look — what this plugin does |
+| [ai-tools](https://github.com/baibiaowang/ai-tools-for-woocommerce) | Store infrastructure — backup, mail, consent, pixels, cache |
 
 All three share `hsm-core.php` and can be active together, each with its own namespace (`ai-design/`) and MCP server.
 
