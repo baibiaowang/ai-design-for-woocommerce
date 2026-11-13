@@ -1,29 +1,90 @@
-# AI Design (Storefront Look)
+# AI Design — Storefront Look over MCP
 
-> **用途**：一个 WordPress 插件 = 一个 MCP 服务器，让 AI agent 驱动**店铺外观与前端展示**——主题样式参数（颜色/字体/按钮/圆角）、公告栏、悬浮联系按钮、信任徽章、首页区块、前台小改（免运费进度条/折扣徽章/维护模式）、商品对比、变体色卡、商品附加选项、产品视频。共 **8 个工具**。
-> **状态**：开发中（**v1.1.0**）。本地 Docker 真店验证通过；**未发布**到 wordpress.org。
-> **配套仓库**：[`baibiaowang/aihand`](https://github.com/baibiaowang/aihand)（运营）· [`baibiaowang/aitools`](https://github.com/baibiaowang/aitools)（基础设施替代）· 本仓（美观）。三者**可共存**（共享 `hsm-core.php`、命名空间 `ai-design/`、option 前缀 `hsm_`）。
-> **快速开始**：见 [安装](#安装)。
+https://img.shields.io/badge/WordPress-6.9%2B-21759b?style=flat-square&logo=wordpress&logoColor=white) https://img.shields.io/badge/WooCommerce-96588a?style=flat-square&logo=woocommerce&logoColor=white) https://img.shields.io/badge/PHP-8.0%2B-777bb4?style=flat-square&logo=php&logoColor=white) https://img.shields.io/badge/License-GPL--2.0--or--later-blue?style=flat-square)
 
-## 依赖
-WordPress 6.9+ · WooCommerce（部分模块需要）· 官方 **MCP Adapter** 插件。
+**An MCP server that lets an AI agent change how a WooCommerce store looks — theme styles, homepage sections, colour palettes, product comparisons, variant swatches, add-ons and product video — without ever injecting HTML or code.**
 
-## 安装
-同 ai-hand。server 名 `ai-design`，端点 `https://<站点>/wp-json/ai-design/mcp`。
+8 tools. Every module is off by default and driven by a whitelist of settings keys. The agent can toggle and fill parameters, but text is sanitised and numbers are cast; it cannot write markup or PHP.
 
-## 工具（8）
-| 工具 | 作用 |
+> 让 AI agent 改店铺外观：主题样式、首页区块、色卡、商品对比、变体色卡、附加选项、商品视频。AI 注入不了 HTML 或代码。
+
+---
+
+## What it can and cannot do
+
+| Can | Cannot |
 |---|---|
-| `design` | 全局样式参数（style: 主色/辅色/字体/圆角/按钮）、公告栏、悬浮按钮、信任徽章 |
-| `store-tweaks` | 前台小改：免运费进度条、折扣徽章、加购文案、最低下单额、数量上下限、维护模式、结账字段可见性… |
-| `home-sections` | 首页区块（用核心区块组合，可在站点编辑器里再编辑）|
-| `compare` | 商品对比按钮 + 对比表 |
-| `swatches` | 变体色卡（颜色/图片/按钮）|
-| `social-proof` | 紧迫感/社会证明 |
-| `product-addons` | 商品附加选项（加价项）|
-| `product-video` | 商品视频（YouTube/Vimeo/直链）|
+| Set theme style tokens (colours, fonts, radii, buttons) on block themes | Edit theme files or inject CSS/HTML |
+| Compose homepage sections from core blocks | Write PHP or shortcodes |
+| Generate palettes, trust badges, announcement bars, floating contact buttons | Install a page builder |
+| Add comparison tables, variant swatches, product add-ons, product video | Change checkout logic or pricing rules |
+| Apply front-end tweaks (free-shipping bar, sale badge, minimum order, maintenance mode) | Modify orders, customers or payments |
 
-## 说明
-- 所有模块**默认关闭**，由白名单设置键驱动；AI 能开关和填参数，但**注入不了 HTML 或代码**（文本都 sanitize、数字都 cast）。
-- 多数是"配置一次"的功能，不是日常运营动作。
-- `design` 的全局样式只对**块主题**生效（经典主题用 Customizer）。
+Global style tokens only affect **block themes**. Classic themes fall back to the Customizer, where these tools do not reach.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[AI agent] -->|MCP| B[MCP Adapter]
+    B --> C[AI Design server<br/>8 abilities]
+    C --> D[Design modules<br/>whitelisted settings keys]
+    D --> E[Sanitise text<br/>cast numbers]
+    E --> F[(hsm_ options)]
+    F --> G[Front-end filters<br/>wp_head / template hooks]
+    G --> H[Rendered storefront]
+```
+
+## Quick start
+
+**Requirements:** WordPress 6.9+, PHP 8.0+, the official [MCP Adapter](https://wordpress.org/plugins/mcp-adapter/) plugin, and a **block theme** for the global style tools. Some modules need WooCommerce.
+
+```bash
+wp plugin install mcp-adapter --activate
+wp plugin activate ai-design        # after copying this repo to wp-content/plugins/
+wp mcp-adapter serve --server=ai-design --user=<admin-account>
+```
+
+Remote HTTP endpoint: `https://<your-site>/wp-json/ai-design/mcp` (authenticate with an application password).
+
+### Verify in 60 seconds
+
+1. Activate the plugin; confirm a server named `ai-design` appears in your MCP client.
+2. Ask the agent to read `design` with no arguments — it returns the current palette and typography, and whether the active theme is a block theme.
+3. Ask it to change one colour, then reload the storefront: the change must be visible without touching a single file.
+4. Ask it to set the announcement bar text to `<script>alert(1)</script>` — it must come back sanitised. If it renders as markup, stop: that is a security bug.
+
+## Tools (8)
+
+| Tool | What it does |
+|---|---|
+| `design` | Global style tokens (primary/secondary colour, font, radius, button), announcement bar, floating contact button, trust badges |
+| `store-tweaks` | Front-end tweaks: free-shipping progress bar, sale badges, add-to-cart copy, minimum order, quantity bounds, maintenance mode, checkout field visibility |
+| `home-sections` | Homepage sections built from core blocks, still editable in the site editor |
+| `compare` | Product comparison button and table |
+| `swatches` | Variant swatches (colour / image / button) |
+| `social-proof` | Urgency and social-proof elements |
+| `product-addons` | Paid product add-ons |
+| `product-video` | Product video (YouTube / Vimeo / direct URL) |
+
+## Design notes
+
+Most of these are **configure-once** features, not daily operations. The intended workflow is: the owner describes the look they want, the agent proposes a palette and a section layout, the owner iterates on the result — rather than the agent restructuring the storefront unattended.
+
+## Sibling plugins
+
+| Repo | Role |
+|---|---|
+| [aihand](https://github.com/baibiaowang/aihand-for-woocommerce) | Store operations — the day-to-day work |
+| **aidesign** (this repo) | Storefront look — what this plugin does |
+| [aitools](https://github.com/baibiaowang/aitools-for-woocommerce) | Store infrastructure — backup, mail, consent, pixels, cache |
+
+All three share `hsm-core.php` and can be active together, each with its own namespace (`ai-design/`) and MCP server.
+
+## Status
+
+**v1.1.0 — development.** Verified against a local Docker store. **Not published on WordPress.org.** Modules are added as the store needs them, so expect missing features rather than bugs.
+
+## License
+
+GPL-2.0-or-later.
